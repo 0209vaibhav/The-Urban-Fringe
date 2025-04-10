@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Manhattan Sidewalk Explorer</title>
+  <link href="https://api.mapbox.com/mapbox-gl-js/v2.15.0/mapbox-gl.css" rel="stylesheet" />
+  <style>
+    :root, html, body {
+      height: 100%;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      display: flex;
+      overflow: hidden;
+      font-family: 'Inter', 'Segoe UI', sans-serif;
+    }
+
+    #map {
+      flex: 1;
+      height: 100% !important; /* Force height */
+      position: relative; /* Ensure proper stacking context */
+    }
+
+    /* Ensure Mapbox canvas takes full height */
+    #map .mapboxgl-canvas {
+      height: 100% !important;
+    }
+
+    .info-panel {
+      width: 360px;
+      height: 100%;
+      background: rgba(255, 255, 255, 0.95);
+      color: #333;
+      padding: 20px;
+      overflow-y: auto;
+      backdrop-filter: blur(8px);
+      box-shadow: -2px 0 8px rgba(0,0,0,0.1);
+      z-index: 2;
+      flex-shrink: 0;
+    }
+
+    .info-panel h1 {
+      font-size: 20px;
+      margin-top: 0;
+      margin-bottom: 12px;
+      color: #1a1a1a;
+    }
+
+    .legend {
+      margin-bottom: 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .legend h4 {
+      margin: 0;
+      font-size: 15px;
+      font-weight: 500;
+      color: #1a1a1a;
+    }
+
+    .legend-scale {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .legend-bars {
+      display: flex;
+      height: 16px;
+      width: 100%;
+    }
+
+    .legend-bar {
+      flex: 1;
+      transition: all 0.2s ease;
+      box-sizing: border-box;
+    }
+
+    .legend-bar.highlighted {
+      border: 2px solid #000;
+      transform: scale(1.05);
+    }
+
+    .legend-bar:nth-child(1) { background-color: #fee5d9; }
+    .legend-bar:nth-child(2) { background-color: #fcae91; }
+    .legend-bar:nth-child(3) { background-color: #fb6a4a; }
+    .legend-bar:nth-child(4) { background-color: #de2d26; }
+    .legend-bar:nth-child(5) { background-color: #a50f15; }
+
+    .legend-labels {
+      display: flex;
+      width: 100%;
+      position: relative;
+      height: 15px;
+    }
+
+    .legend-label {
+      position: absolute;
+      font-size: 12px;
+      transform: translateX(-50%);
+      color: #666;
+    }
+
+    .legend-label:nth-child(1) { left: 0; transform: translateX(0); }
+    .legend-label:nth-child(2) { left: 20%; }
+    .legend-label:nth-child(3) { left: 40%; }
+    .legend-label:nth-child(4) { left: 60%; }
+    .legend-label:nth-child(5) { left: 80%; }
+    .legend-label:nth-child(6) { left: 100%; transform: translateX(-100%); }
+
+    .description {
+      font-size: 13px;
+      line-height: 1.5;
+      margin-bottom: 20px;
+      color: #666;
+    }
+
+    .chart-container {
+      margin-bottom: 40px;
+      height: 280px;
+      position: relative;
+    }
+
+    .chart-container:last-child {
+      margin-bottom: 24px;
+    }
+
+    .chart-container h4 {
+      color: #1a1a1a;
+      margin-bottom: 8px;
+      font-size: 14px;
+    }
+
+    canvas {
+      display: block;
+    }
+
+    @media (max-width: 768px) {
+      #map {
+        width: 100%;
+      }
+      .info-panel {
+        display: none;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div id="map"></div>
+
+  <div class="info-panel">
+    <h1>Manhattan Sidewalk Explorer</h1>
+
+    <div class="legend">
+      <h4>Street Width (ft)</h4>
+      <div class="legend-scale">
+        <div class="legend-bars">
+          <div class="legend-bar"></div>
+          <div class="legend-bar"></div>
+          <div class="legend-bar"></div>
+          <div class="legend-bar"></div>
+          <div class="legend-bar"></div>
+        </div>
+        <div class="legend-labels">
+          <span class="legend-label">0</span>
+          <span class="legend-label">30</span>
+          <span class="legend-label">50</span>
+          <span class="legend-label">70</span>
+          <span class="legend-label">90</span>
+          <span class="legend-label">120+</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="description">
+      This interactive map visualizes street segments in Manhattan categorized by their width. Explore the spatial characteristics of urban infrastructure through real-time visuals and data. Use the charts below to observe distribution and relationships between sidewalk width and segment length.
+    </div>
+
+    <div class="chart-container">
+      <h4>Width Distribution</h4>
+      <canvas id="chart-histogram"></canvas>
+    </div>
+
+    <div class="chart-container">
+      <h4>Width vs Length</h4>
+      <canvas id="chart-scatter"></canvas>
+    </div>
+  </div>
+
+  <script src="https://api.mapbox.com/mapbox-gl-js/v2.15.0/mapbox-gl.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="sidewalk_cafes_map.js"></script>
+</body>
+</html>

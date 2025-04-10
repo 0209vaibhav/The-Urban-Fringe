@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Manhattan Open Restaurants Map</title>
+  <link href="https://api.mapbox.com/mapbox-gl-js/v2.15.0/mapbox-gl.css" rel="stylesheet" />
+  <style>
+    :root, html, body {
+      height: 100%;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      display: flex;
+      overflow: hidden;
+      font-family: 'Inter', 'Segoe UI', sans-serif;
+    }
+
+    #map {
+      flex: 1;
+      height: 100% !important;
+      position: relative;
+    }
+
+    #map .mapboxgl-canvas {
+      height: 100% !important;
+    }
+
+    .info-panel {
+      width: 360px;
+      height: 100%;
+      background: rgba(255, 255, 255, 0.95);
+      color: #333;
+      padding: 20px;
+      overflow-y: auto;
+      backdrop-filter: blur(8px);
+      box-shadow: -2px 0 8px rgba(0,0,0,0.1);
+      z-index: 2;
+      flex-shrink: 0;
+    }
+
+    .info-panel h1 {
+      font-size: 20px;
+      margin-top: 0;
+      margin-bottom: 12px;
+      color: #1a1a1a;
+    }
+
+    .legend {
+      margin-bottom: 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .legend h4 {
+      margin: 0;
+      font-size: 15px;
+      font-weight: 500;
+      color: #1a1a1a;
+    }
+
+    .legend-scale {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .legend-item {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 13px;
+      color: #444;
+      padding: 4px 8px;
+      border-radius: 4px;
+      transition: background-color 0.2s;
+    }
+
+    .legend-item.highlighted {
+      background-color: rgba(0, 0, 0, 0.05);
+    }
+
+    .legend-color {
+      width: 16px;
+      height: 16px;
+      border-radius: 3px;
+      display: inline-block;
+    }
+
+    .legend-sidewalk { background-color: #4caf50; }
+    .legend-roadway { background-color: #ff9800; }
+    .legend-both { background-color: #2196f3; }
+    .legend-other { background-color: #9e9e9e; }
+
+    .description {
+      font-size: 13px;
+      line-height: 1.5;
+      margin-bottom: 20px;
+      color: #666;
+    }
+
+    .chart-container {
+      margin-bottom: 40px;
+      height: 280px;
+      position: relative;
+    }
+
+    .chart-container:last-child {
+      margin-bottom: 24px;
+    }
+
+    .chart-container h4 {
+      color: #1a1a1a;
+      margin-bottom: 8px;
+      font-size: 14px;
+    }
+
+    canvas {
+      display: block;
+    }
+
+    @media (max-width: 768px) {
+      #map {
+        width: 100%;
+      }
+      .info-panel {
+        display: none;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div id="map"></div>
+
+  <div class="info-panel">
+    <h1>Manhattan Open Restaurants</h1>
+
+    <div class="legend">
+      <h4>Seating Choice</h4>
+      <div class="legend-scale">
+        <div class="legend-item"><span class="legend-color legend-sidewalk"></span> Sidewalk</div>
+        <div class="legend-item"><span class="legend-color legend-roadway"></span> Roadway</div>
+        <div class="legend-item"><span class="legend-color legend-both"></span> Both</div>
+        <div class="legend-item"><span class="legend-color legend-other"></span> Other/Unknown</div>
+      </div>
+    </div>
+
+    <div class="description">
+      This interactive map showcases open restaurants in Manhattan that offer outdoor seating. Explore locations, seating types, and neighborhoods. Each dot on the map represents a restaurant — click for details!
+    </div>
+
+    <div class="chart-container">
+      <h4>Seating Type Distribution</h4>
+      <canvas id="chart-histogram"></canvas>
+    </div>
+
+    <div class="chart-container">
+      <h4>Top 10 Neighborhoods by Restaurant Count</h4>
+      <canvas id="chart-scatter"></canvas>
+    </div>
+  </div>
+
+  <script src="https://api.mapbox.com/mapbox-gl-js/v2.15.0/mapbox-gl.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="Open_Restaurants_Inspections_20250408.js"></script>
+</body>
+</html>

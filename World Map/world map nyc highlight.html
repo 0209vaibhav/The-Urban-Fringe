@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>City Map - NYC Highlight</title>
+    <link href="https://api.mapbox.com/mapbox-gl-js/v2.15.0/mapbox-gl.css" rel="stylesheet">
+    <link href="world map.css" rel="stylesheet">
+    <style>
+        body, html { margin: 0; padding: 0; height: 100%; }
+        #map { width: 100%; height: 100vh; }
+        .legend {
+            position: absolute;
+            bottom: 20px;
+            right: 20px;
+            background-color: rgba(255, 255, 255, 0.8);
+            padding: 20px;
+            border-radius: 8px;
+            font-family: Arial, sans-serif;
+            font-size: 20px;
+            z-index: 1; /* Ensure legend is above map */
+        }
+        .legend h4 {
+            margin: 0 0 15px 0;
+            text-align: center;
+            font-size: 24px;
+        }
+        .legend div {
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+        }
+        .legend span {
+            display: inline-block;
+            width: 24px;
+            height: 24px;
+            margin-right: 12px;
+            border: 1px solid #555; /* Add a border for visibility */
+        }
+    </style>
+</head>
+<body>
+    <div id="map"></div>
+    <div class="legend">
+        <h4>NYC Boroughs</h4>
+        <div><span style="background-color: #ff007f;"></span>Manhattan</div>
+        <div><span style="background-color: #0080ff;"></span>Bronx</div>
+        <div><span style="background-color: #ff7f00;"></span>Brooklyn</div>
+        <div><span style="background-color: #80ff00;"></span>Queens</div>
+        <div><span style="background-color: #8000ff;"></span>Staten Island</div>
+    </div>
+    <script src="https://api.mapbox.com/mapbox-gl-js/v2.15.0/mapbox-gl.js"></script>
+    <script src="world map nyc highlight.js"></script>
+</body>
+</html>

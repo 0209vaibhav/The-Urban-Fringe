@@ -1,0 +1,10 @@
+# Large data files
+Sidewalk cafes/data/NYC_Planimetric_Database__Sidewalk_20250408/Cleaned_NYC_Planimetric_Database__Sidewalk_20250408.geojson
+Sidewalk cafes/data/NYC_Planimetric_Database__Sidewalk_20250408/NYC_Planimetric_Database__Sidewalk_20250408.csv
+Sidewalk cafes/data/NYC_Planimetric_Database__Sidewalk_20250408/Cleaned_NYC_Planimetric_Database__Sidewalk_20250408.csv
+Sidewalk cafes/data/2015_Street_Tree_Census_-_Tree_Data_20250408/2015_Street_Tree_Census_-_Tree_Data_20250408.csv
+Sidewalk cafes/data/SIDEWALK_LINE_20250408/sidewalk_lines.geojson
+
+# Ignore all large CSV and GeoJSON files in data directories
+Sidewalk cafes/data/**/*.csv
+Sidewalk cafes/data/**/*.geojson 

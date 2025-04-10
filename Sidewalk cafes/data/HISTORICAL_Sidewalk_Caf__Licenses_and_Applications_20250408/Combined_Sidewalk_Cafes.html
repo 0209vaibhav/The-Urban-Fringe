@@ -1,0 +1,457 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>NYC Sidewalk Cafes Explorer</title>
+  <link href="https://api.mapbox.com/mapbox-gl-js/v2.15.0/mapbox-gl.css" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+  <style>
+    :root, html, body {
+      height: 100%;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      display: flex;
+      overflow: hidden;
+      font-family: 'Inter', 'Segoe UI', sans-serif;
+    }
+
+    #map {
+      flex: 1;
+      height:  100% !important;
+      position: relative;
+    }
+
+    #map .mapboxgl-canvas {
+      height: 100% !important;
+    }
+
+    .info-panel {
+      width: 360px;
+      height: 100%;
+      background: rgba(255, 255, 255, 0.95);
+      color: #333;
+      padding: 20px;
+      overflow-y: auto;
+      backdrop-filter: blur(8px);
+      box-shadow: -2px 0 8px rgba(0,0,0,0.1);
+      z-index: 2;
+      flex-shrink: 0;
+    }
+
+    .info-panel h1 {
+      font-size: 20px;
+      margin-top: 0;
+      margin-bottom: 12px;
+      color: #1a1a1a;
+    }
+
+    .legend {
+      margin-bottom: 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .legend h4 {
+      margin: 0;
+      font-size: 15px;
+      font-weight: 500;
+      color: #1a1a1a;
+    }
+
+    .legend-scale {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .legend-bars {
+      display: flex;
+      height: 16px;
+      width: 100%;
+    }
+
+    .legend-bar {
+      flex: 1;
+      transition: all 0.2s ease;
+      box-sizing: border-box;
+      cursor: pointer;
+    }
+
+    .legend-bar.highlighted {
+      border: 2px solid #000;
+      transform: scale(1.05);
+    }
+
+    .legend-bar:nth-child(1) { background-color: #fee5d9; }
+    .legend-bar:nth-child(2) { background-color: #fcae91; }
+    .legend-bar:nth-child(3) { background-color: #fb6a4a; }
+    .legend-bar:nth-child(4) { background-color: #de2d26; }
+    .legend-bar:nth-child(5) { background-color: #a50f15; }
+
+    .legend-labels {
+      display: flex;
+      width: 100%;
+      position: relative;
+      height: 15px;
+    }
+
+    .legend-label {
+      position: absolute;
+      font-size: 12px;
+      transform: translateX(-50%);
+      color: #666;
+    }
+
+    .legend-label:nth-child(1) { left: 0; transform: translateX(0); }
+    .legend-label:nth-child(2) { left: 20%; }
+    .legend-label:nth-child(3) { left: 40%; }
+    .legend-label:nth-child(4) { left: 60%; }
+    .legend-label:nth-child(5) { left: 80%; }
+    .legend-label:nth-child(6) { left: 100%; transform: translateX(-100%); }
+
+    .description {
+      font-size: 13px;
+      line-height: 1.5;
+      margin-bottom: 20px;
+      color: #666;
+    }
+
+    .details-section {
+      margin-bottom: 20px;
+      padding: 18px;
+      background: #ffffff;
+      border-radius: 12px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+      border: 1px solid #ddd;
+      transition: all 0.3s ease;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      text-align: left;
+      height: 250px;
+    }
+
+    .details-section h3 {
+      margin: 0 0 0 0;
+      font-size: 18px;
+      color: #1a1a1a;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .details-section .restaurant-header {
+      margin-bottom: 0px;
+    }
+
+    .details-section .restaurant-name {
+      font-size: 16px;
+      font-weight: 600;
+      color: #1a1a1a;
+      margin-bottom: 6px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .details-section .restaurant-address,
+    .details-section .restaurant-address2 {
+      font-size: 14px;
+      color: #666;
+      margin-bottom: 6px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .details-section .info-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin: 10px 0;
+    }
+
+    .details-section .info-item {
+      background: #f9f9f9;
+      padding: 8px;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      transition: all 0.2s ease;
+      height: 20px;
+    }
+
+    .details-section .info-item:hover {
+      background: #f0f0f0;
+      transform: translateY(-1px);
+    }
+
+    .details-section .info-item .label {
+      font-size: 12px;
+      color: #666;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .details-section .info-item .value {
+      font-weight: 500;
+      color: #1a1a1a;
+      font-size: 13px;
+    }
+
+    .details-section .status {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      padding: 2px 6px;
+      border-radius: 3px;
+      font-size: 11px;
+      font-weight: 500;
+      margin-bottom: -4px;
+    }
+
+    .status.active {
+      background-color: #e6f4ea;
+      color: #1e8e3e;
+    }
+
+    .status.inactive {
+      background-color: #fce8e6;
+      color: #d93025;
+    }
+
+    .details-section.placeholder {
+      text-align: center;
+      color: #999;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      gap: 14px;
+      height: 250px;
+    }
+
+    .details-section.placeholder i {
+      font-size: 24px;
+      color: #ccc;
+    }
+
+    .details-section.placeholder p {
+      margin: 0;
+      font-size: 13px;
+    }
+
+    .chart-container {
+      margin-bottom: 40px;
+      height: 280px;
+      position: relative;
+      cursor: pointer;
+    }
+
+    .chart-container:last-child {
+      margin-bottom: 24px;
+    }
+
+    .chart-container h4 {
+      color: #1a1a1a;
+      margin-bottom: 8px;
+      font-size: 14px;
+    }
+
+    canvas {
+      display: block;
+    }
+
+    @media (max-width: 768px) {
+      #map {
+        width: 100%;
+      }
+      .info-panel {
+        display: none;
+      }
+    }
+
+    .legend-shapes {
+      margin-top: 4px;
+      width: 100%;
+    }
+
+    .legend-shape-row {
+      display: flex;
+      width: 100%;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .legend-shape {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 12px;
+      color: #666;
+      flex: 1;
+    }
+
+    .shape-square {
+      width: 12px;
+      height: 12px;
+      background-color: #999;
+      border-radius: 2px;
+    }
+
+    .shape-circle {
+      width: 12px;
+      height: 12px;
+      background-color: #999;
+      border-radius: 50%;
+    }
+  </style>
+</head>
+<body>
+
+  <div id="map"></div>
+
+  <div class="info-panel">
+    <h1>NYC Sidewalk Cafes Explorer</h1>
+
+    <div class="description">
+      This interactive map visualizes sidewalk cafes across New York City, categorized by their square footage. Explore the distribution and characteristics of outdoor dining spaces through real-time visuals and data.
+    </div>
+
+    <div class="legend">
+      <h4>Area</h4>
+      <div class="legend-scale">
+        <div class="legend-bars">
+          <div class="legend-bar"></div>
+          <div class="legend-bar"></div>
+          <div class="legend-bar"></div>
+          <div class="legend-bar"></div>
+          <div class="legend-bar"></div>
+        </div>
+        <div class="legend-labels">
+          <span class="legend-label">0</span>
+          <span class="legend-label">100</span>
+          <span class="legend-label">300</span>
+          <span class="legend-label">500</span>
+          <span class="legend-label">700</span>
+          <span class="legend-label">1000+</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="legend">
+      <h4>Type</h4>
+      <div class="legend-scale">
+        <div class="legend-shapes">
+          <div class="legend-shape-row">
+            <div class="legend-shape">
+              <div class="shape-square"></div>
+              <span>Enclosed</span>
+            </div>
+            <div class="legend-shape">
+              <div class="shape-circle"></div>
+              <span>Unenclosed</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="details-section placeholder" id="restaurant-details">
+      <h3>Restaurant Details</h3>
+      <p>Hover or click on a marker to see restaurant details</p>
+    </div>
+  </div>
+
+  <div class="info-panel">
+    <div class="chart-container">
+      <h4>Area of Sidewalk Cafes</h4>
+      <canvas id="chart-histogram"></canvas>
+    </div>
+
+    <div class="chart-container">
+      <h4>Size vs Tables</h4>
+      <canvas id="chart-scatter"></canvas>
+    </div>
+  </div>
+
+  <script src="https://api.mapbox.com/mapbox-gl-js/v2.15.0/mapbox-gl.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script>
+    // This will be used to store the map instance globally
+    window.mapInstance = null;
+    
+    // Function to handle legend bar interactions
+    function setupLegendInteractions() {
+      const legendBars = document.querySelectorAll('.legend-bar');
+      legendBars.forEach((bar, index) => {
+        bar.addEventListener('mouseenter', () => {
+          const minSqft = [0, 100, 300, 500, 700][index];
+          const maxSqft = [100, 300, 500, 700, Infinity][index];
+          window.highlightMarkersBySize(minSqft, maxSqft);
+        });
+
+        bar.addEventListener('mouseleave', () => {
+          window.resetMarkerHighlights();
+        });
+      });
+    }
+
+    // Function to handle chart interactions
+    function setupChartInteractions() {
+      const histogram = document.getElementById('chart-histogram');
+      const scatter = document.getElementById('chart-scatter');
+
+      // Histogram interaction
+      histogram.addEventListener('mousemove', (e) => {
+        if (!window.histogramChart) return;
+        
+        const points = window.histogramChart.getElementsAtEventForMode(e, 'nearest', { intersect: true }, false);
+        if (points.length > 0) {
+          const index = points[0].index;
+          const minSqft = [0, 100, 300, 500, 700][index];
+          const maxSqft = [100, 300, 500, 700, Infinity][index];
+          window.highlightMarkersBySize(minSqft, maxSqft);
+        }
+      });
+
+      histogram.addEventListener('mouseleave', () => {
+        window.resetMarkerHighlights();
+      });
+
+      // Scatter plot interaction
+      scatter.addEventListener('mousemove', (e) => {
+        if (!window.scatterChart) return;
+        
+        const points = window.scatterChart.getElementsAtEventForMode(e, 'nearest', { intersect: true }, false);
+        if (points.length > 0) {
+          const point = window.scatterChart.data.datasets[0].data[points[0].index];
+          const category = window.getSizeCategory(point.x);
+          const minSqft = [0, 100, 300, 500, 700][category];
+          const maxSqft = [100, 300, 500, 700, Infinity][category];
+          window.highlightMarkersBySize(minSqft, maxSqft);
+        }
+      });
+
+      scatter.addEventListener('mouseleave', () => {
+        window.resetMarkerHighlights();
+      });
+    }
+
+    // Initialize interactions after the map is loaded
+    document.addEventListener('DOMContentLoaded', () => {
+      setupLegendInteractions();
+      setupChartInteractions();
+      resetRestaurantDetails();
+    });
+  </script>
+  <script src="Combined_Sidewalk_Cafes.js"></script>
+</body>
+</html>
