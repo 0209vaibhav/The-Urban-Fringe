@@ -1,34 +1,35 @@
-// Function to check if an image exists
-function checkImageExists(url) {
-  return new Promise((resolve) => {
-    const img = new Image();
-    img.onload = () => resolve(true);
-    img.onerror = () => resolve(false);
-    // Use the original URL without encoding
-    img.src = url;
-  });
+// Global variable to store image data
+let imageData = null;
+
+// Function to load image data
+async function loadImageData() {
+  if (!imageData) {
+    try {
+      const response = await fetch('image_data.json');
+      if (!response.ok) {
+        throw new Error('Failed to load image data');
+      }
+      imageData = await response.json();
+    } catch (error) {
+      console.error('Error loading image data:', error);
+      imageData = {};
+    }
+  }
+  return imageData;
 }
 
 // Function to get available years for a restaurant
 async function getYearsForRestaurant(restaurantName) {
   console.log(`Checking years for restaurant: ${restaurantName}`);
-  const years = [];
+  const data = await loadImageData();
+  const restaurant = data[restaurantName];
   
-  // Get all files in the restaurant directory
-  const response = await fetch(`/12%20RESTAURANTS/photos/${restaurantName}/`);
-  if (!response.ok) {
-    console.error(`Failed to get directory listing for ${restaurantName}`);
-    return years;
+  if (!restaurant) {
+    console.error(`No data found for restaurant: ${restaurantName}`);
+    return [];
   }
   
-  const text = await response.text();
-  // Parse the directory listing to find image files
-  const imageFiles = text.match(/_(\d{4})\.jpg/g) || [];
-  imageFiles.forEach(file => {
-    const year = parseInt(file.match(/_(\d{4})\.jpg/)[1]);
-    years.push(year);
-  });
-  
+  const years = restaurant.images.map(img => img.year);
   console.log(`Found years for ${restaurantName}:`, years);
   return years;
 }
@@ -37,12 +38,15 @@ async function getYearsForRestaurant(restaurantName) {
 async function getAvailableYears(gridItems) {
   console.log('Getting available years for all restaurants');
   const allYears = new Set();
+  const data = await loadImageData();
+  
   for (const item of gridItems) {
     const restaurantName = item.getAttribute('data-restaurant');
     console.log(`Processing restaurant: ${restaurantName}`);
     const years = await getYearsForRestaurant(restaurantName);
     years.forEach(year => allYears.add(year));
   }
+  
   const yearsArray = Array.from(allYears).sort((a, b) => a - b);
   console.log('Available years:', yearsArray);
   return yearsArray;
@@ -50,7 +54,15 @@ async function getAvailableYears(gridItems) {
 
 // Function to get the last available year for a restaurant
 async function getLastAvailableYear(restaurantName, targetYear) {
-  const years = await getYearsForRestaurant(restaurantName);
+  const data = await loadImageData();
+  const restaurant = data[restaurantName];
+  
+  if (!restaurant) {
+    console.error(`No images found for ${restaurantName}`);
+    return null;
+  }
+  
+  const years = restaurant.images.map(img => img.year);
   if (years.length === 0) {
     console.error(`No images found for ${restaurantName}`);
     return null;
@@ -65,6 +77,20 @@ async function getLastAvailableYear(restaurantName, targetYear) {
   
   // Return the most recent available year
   return Math.max(...availableYears);
+}
+
+// Function to get image path for a restaurant and year
+async function getImagePath(restaurantName, year) {
+  const data = await loadImageData();
+  const restaurant = data[restaurantName];
+  
+  if (!restaurant) {
+    console.error(`No data found for restaurant: ${restaurantName}`);
+    return null;
+  }
+  
+  const image = restaurant.images.find(img => img.year === year);
+  return image ? image.path : null;
 }
 
 // Function to update images
@@ -83,7 +109,13 @@ async function updateImages(selectedYear, gridItems) {
       continue;
     }
 
-    const imageUrl = `/12%20RESTAURANTS/photos/${restaurantName}/${restaurantName}_${lastAvailableYear}.jpg`;
+    const imagePath = await getImagePath(restaurantName, lastAvailableYear);
+    if (!imagePath) {
+      console.error(`No image path found for ${restaurantName} in year ${lastAvailableYear}`);
+      continue;
+    }
+
+    const imageUrl = `/12%20RESTAURANTS/photos/${imagePath}`;
     console.log(`Updating image for ${restaurantName}: ${imageUrl} (using year ${lastAvailableYear})`);
     
     // Create a promise for this image transition

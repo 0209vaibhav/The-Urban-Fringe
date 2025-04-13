@@ -1,0 +1,94 @@
+{
+  "67 Orange Street": {
+    "images": [
+      {"year": 2016, "path": "67 Orange Street/67 Orange Street_2016.jpg"},
+      {"year": 2022, "path": "67 Orange Street/67 Orange Street_2022.jpg"},
+      {"year": 2024, "path": "67 Orange Street/67 Orange Street_2024.jpg"}
+    ]
+  },
+  "Bixi": {
+    "images": [
+      {"year": 2012, "path": "Bixi/Bixi_2012.jpg"},
+      {"year": 2022, "path": "Bixi/Bixi_2022.jpg"},
+      {"year": 2023, "path": "Bixi/Bixi_2023.jpg"},
+      {"year": 2024, "path": "Bixi/Bixi_2024.jpg"}
+    ]
+  },
+  "Cantina Taqueria & Tequila Bar": {
+    "images": [
+      {"year": 2016, "path": "Cantina Taqueria & Tequila Bar/Cantina Taqueria & Tequila Bar_2016.jpg"},
+      {"year": 2022, "path": "Cantina Taqueria & Tequila Bar/Cantina Taqueria & Tequila Bar_2022.jpg"},
+      {"year": 2024, "path": "Cantina Taqueria & Tequila Bar/Cantina Taqueria & Tequila Bar_2024.jpg"}
+    ]
+  },
+  "Harlem Burger": {
+    "images": [
+      {"year": 2014, "path": "Harlem Burger/Harlem Burger_2014.jpg"},
+      {"year": 2021, "path": "Harlem Burger/Harlem Burger_2021.jpg"},
+      {"year": 2023, "path": "Harlem Burger/Harlem Burger_2023.jpg"},
+      {"year": 2024, "path": "Harlem Burger/Harlem Burger_2024.jpg"}
+    ]
+  },
+  "Lalibela Ethopian Restaurant": {
+    "images": [
+      {"year": 2016, "path": "Lalibela Ethopian Restaurant/Lalibela Ethopian Restaurant_2016.jpg"},
+      {"year": 2021, "path": "Lalibela Ethopian Restaurant/Lalibela Ethopian Restaurant_2021.jpg"},
+      {"year": 2024, "path": "Lalibela Ethopian Restaurant/Lalibela Ethopian Restaurant_2024.jpg"}
+    ]
+  },
+  "Lido Harlem Restaurant": {
+    "images": [
+      {"year": 2011, "path": "Lido Harlem Restaurant/Lido Harlem Restaurant_2011.jpg"},
+      {"year": 2014, "path": "Lido Harlem Restaurant/Lido Harlem Restaurant_2014.jpg"},
+      {"year": 2019, "path": "Lido Harlem Restaurant/Lido Harlem Restaurant_2019.jpg"},
+      {"year": 2021, "path": "Lido Harlem Restaurant/Lido Harlem Restaurant_2021.jpg"},
+      {"year": 2023, "path": "Lido Harlem Restaurant/Lido Harlem Restaurant_2023.jpg"},
+      {"year": 2024, "path": "Lido Harlem Restaurant/Lido Harlem Restaurant_2024.jpg"}
+    ]
+  },
+  "Melba's Restaurant": {
+    "images": [
+      {"year": 2016, "path": "Melba's Restaurant/Melba's Restaurant_2016.jpg"},
+      {"year": 2022, "path": "Melba's Restaurant/Melba's Restaurant_2022.jpg"},
+      {"year": 2024, "path": "Melba's Restaurant/Melba's Restaurant_2024.jpg"}
+    ]
+  },
+  "Mess Hall": {
+    "images": [
+      {"year": 2014, "path": "Mess Hall/Mess Hall_2014.jpg"},
+      {"year": 2017, "path": "Mess Hall/Mess Hall_2017.jpg"},
+      {"year": 2023, "path": "Mess Hall/Mess Hall_2023.jpg"},
+      {"year": 2024, "path": "Mess Hall/Mess Hall_2024.jpg"}
+    ]
+  },
+  "Ortomare Ristorante Pizzeria": {
+    "images": [
+      {"year": 2016, "path": "Ortomare Ristorante Pizzeria/Ortomare Ristorante Pizzeria_2016.jpg"},
+      {"year": 2018, "path": "Ortomare Ristorante Pizzeria/Ortomare Ristorante Pizzeria_2018.jpg"},
+      {"year": 2024, "path": "Ortomare Ristorante Pizzeria/Ortomare Ristorante Pizzeria_2024.jpg"}
+    ]
+  },
+  "Rosa Pizza": {
+    "images": [
+      {"year": 2011, "path": "Rosa Pizza/Rosa Pizza_2011.jpg"},
+      {"year": 2022, "path": "Rosa Pizza/Rosa Pizza_2022.jpg"},
+      {"year": 2024, "path": "Rosa Pizza/Rosa Pizza_2024.jpg"}
+    ]
+  },
+  "Silvana": {
+    "images": [
+      {"year": 2011, "path": "Silvana/Silvana_2011.jpg"},
+      {"year": 2022, "path": "Silvana/Silvana_2022.jpg"},
+      {"year": 2024, "path": "Silvana/Silvana_2024.jpg"}
+    ]
+  },
+  "Vinateria": {
+    "images": [
+      {"year": 2011, "path": "Vinateria/Vinateria_2011.jpg"},
+      {"year": 2014, "path": "Vinateria/Vinateria_2014.jpg"},
+      {"year": 2019, "path": "Vinateria/Vinateria_2019.jpg"},
+      {"year": 2022, "path": "Vinateria/Vinateria_2022.jpg"},
+      {"year": 2024, "path": "Vinateria/Vinateria_2024.jpg"}
+    ]
+  }
+} 
