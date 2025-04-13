@@ -17,7 +17,7 @@ map.addControl(new mapboxgl.NavigationControl());
 
 // Load and add borough GeoJSON
 map.on('load', () => {
-    fetch('nybb.geojson') // Make sure nybb.geojson is in the same folder
+    fetch('nybb.geojson') 
         .then(response => {
             if (!response.ok) throw new Error("Failed to load GeoJSON.");
             return response.json();
