@@ -134,38 +134,29 @@ function resetHighlights() {
 
 async function loadSidewalkCafesGeoJSON() {
   try {
-    // Load both datasets
-    const [response1, response2] = await Promise.all([
-      fetch('Manhattan_Sidewalk_Cafes.geojson'),
-      fetch('combined_manhattan_2datasets.geojson')
-    ]);
+    // Load the dataset
+    const response = await fetch('cleaned-noduplicates-combined-manhattan.geojson');
     
-    const [geojson1, geojson2] = await Promise.all([
-      response1.json(),
-      response2.json()
-    ]);
+    const geojson = await response.json();
 
-    // Combine the features from both datasets
-    const combinedFeatures = [
-      ...geojson1.features,
-      ...geojson2.features.map(feature => ({
-        ...feature,
-        properties: {
-          ...feature.properties,
-          // Map the new dataset properties to match the existing structure
-          BUSINESS_NAME: feature.properties.RestaurantName || feature.properties.DoingBusinessAs,
-          BUILDING: feature.properties.BuildingNumber,
-          STREET: feature.properties.Street,
-          SWC_SQ_FT: feature.properties['Sidewalk Dimensions (Area)'] || 0,
-          SWC_TYPE: feature.properties.SeatingChoice === 'both' ? 'Enclosed' : 'Unenclosed',
-          SWC_TABLES: 0, // Default value if not available
-          SWC_CHAIRS: 0, // Default value if not available
-          LIC_STATUS: feature.properties.IsSidewayCompliant === 'Compliant' ? 'Active' : 'Inactive',
-          BUSINESS_NAME2: feature.properties.LegalBusinessName,
-          APP_ID: feature.properties.RestaurantInspectionID?.toString() || feature.properties.objectid?.toString() || ''
-        }
-      }))
-    ];
+    // Process the features
+    const combinedFeatures = geojson.features.map(feature => ({
+      ...feature,
+      properties: {
+        ...feature.properties,
+        // Map the properties to match the existing structure
+        BUSINESS_NAME: feature.properties.RestaurantName || feature.properties.DoingBusinessAs,
+        BUILDING: feature.properties.BuildingNumber,
+        STREET: feature.properties.Street,
+        SWC_SQ_FT: feature.properties['Sidewalk Dimensions (Area)'] || 0,
+        SWC_TYPE: feature.properties.SeatingChoice === 'both' ? 'Enclosed' : 'Unenclosed',
+        SWC_TABLES: 0, // Default value if not available
+        SWC_CHAIRS: 0, // Default value if not available
+        LIC_STATUS: feature.properties.IsSidewayCompliant === 'Compliant' ? 'Active' : 'Inactive',
+        BUSINESS_NAME2: feature.properties.LegalBusinessName,
+        APP_ID: feature.properties.RestaurantInspectionID?.toString() || feature.properties.objectid?.toString() || ''
+      }
+    }));
 
     const combinedGeoJSON = {
       type: 'FeatureCollection',
@@ -493,7 +484,7 @@ async function loadSidewalkCafesGeoJSON() {
 async function loadSidewalkPolygonsGeoJSON() {
   try {
     // Update the path to point to the correct location of the sidewalk GeoJSON file
-    const response = await fetch('../sidewalk lines/Manhattan_Sidewalks.geojson');
+    const response = await fetch('Manhattan_Sidewalks.geojson');
     
     if (!response.ok) {
       throw new Error(`HTTP error! status: ${response.status}`);
