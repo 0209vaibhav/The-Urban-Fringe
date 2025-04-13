@@ -1,7 +1,3 @@
-# Ignore all large CSV and GeoJSON files in data directories
-Sidewalk cafes/data/**/*.csv
-Sidewalk cafes/data/**/*.geojson
-
 # System files
 .DS_Store
 Thumbs.db
