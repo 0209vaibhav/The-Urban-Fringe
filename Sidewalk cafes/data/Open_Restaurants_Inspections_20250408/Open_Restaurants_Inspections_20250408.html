@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Manhattan Open Restaurants Map</title>
+  <title>NYC Open Restaurants Explorer</title>
   <link href="https://api.mapbox.com/mapbox-gl-js/v2.15.0/mapbox-gl.css" rel="stylesheet" />
   <style>
     :root, html, body {
@@ -20,10 +20,11 @@
 
     #map {
       flex: 1;
-      height: 100% !important;
-      position: relative;
+      height: 100% !important; /* Force height */
+      position: relative; /* Ensure proper stacking context */
     }
 
+    /* Ensure Mapbox canvas takes full height */
     #map .mapboxgl-canvas {
       height: 100% !important;
     }
@@ -64,36 +65,53 @@
 
     .legend-scale {
       display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
+      flex-direction: column;
+      gap: 4px;
     }
 
-    .legend-item {
+    .legend-bars {
       display: flex;
-      align-items: center;
-      gap: 6px;
-      font-size: 13px;
-      color: #444;
-      padding: 4px 8px;
-      border-radius: 4px;
-      transition: background-color 0.2s;
-    }
-
-    .legend-item.highlighted {
-      background-color: rgba(0, 0, 0, 0.05);
-    }
-
-    .legend-color {
-      width: 16px;
       height: 16px;
-      border-radius: 3px;
-      display: inline-block;
+      width: 100%;
     }
 
-    .legend-sidewalk { background-color: #4caf50; }
-    .legend-roadway { background-color: #ff9800; }
-    .legend-both { background-color: #2196f3; }
-    .legend-other { background-color: #9e9e9e; }
+    .legend-bar {
+      flex: 1;
+      transition: all 0.2s ease;
+      box-sizing: border-box;
+    }
+
+    .legend-bar.highlighted {
+      border: 2px solid #000;
+      transform: scale(1.05);
+    }
+
+    .legend-bar:nth-child(1) { background-color: #fee5d9; }
+    .legend-bar:nth-child(2) { background-color: #fcae91; }
+    .legend-bar:nth-child(3) { background-color: #fb6a4a; }
+    .legend-bar:nth-child(4) { background-color: #de2d26; }
+    .legend-bar:nth-child(5) { background-color: #a50f15; }
+
+    .legend-labels {
+      display: flex;
+      width: 100%;
+      position: relative;
+      height: 15px;
+    }
+
+    .legend-label {
+      position: absolute;
+      font-size: 12px;
+      transform: translateX(-50%);
+      color: #666;
+    }
+
+    .legend-label:nth-child(1) { left: 0; transform: translateX(0); }
+    .legend-label:nth-child(2) { left: 20%; }
+    .legend-label:nth-child(3) { left: 40%; }
+    .legend-label:nth-child(4) { left: 60%; }
+    .legend-label:nth-child(5) { left: 80%; }
+    .legend-label:nth-child(6) { left: 100%; transform: translateX(-100%); }
 
     .description {
       font-size: 13px;
@@ -137,29 +155,35 @@
   <div id="map"></div>
 
   <div class="info-panel">
-    <h1>Manhattan Open Restaurants</h1>
+    <h1>NYC Open Restaurants Explorer</h1>
 
     <div class="legend">
-      <h4>Seating Choice</h4>
+      <h4>Seating Type</h4>
       <div class="legend-scale">
-        <div class="legend-item"><span class="legend-color legend-sidewalk"></span> Sidewalk</div>
-        <div class="legend-item"><span class="legend-color legend-roadway"></span> Roadway</div>
-        <div class="legend-item"><span class="legend-color legend-both"></span> Both</div>
-        <div class="legend-item"><span class="legend-color legend-other"></span> Other/Unknown</div>
+        <div class="legend-bars">
+          <div class="legend-bar" style="background-color: #1f77b4"></div>
+          <div class="legend-bar" style="background-color: #ff7f0e"></div>
+          <div class="legend-bar" style="background-color: #2ca02c"></div>
+        </div>
+        <div class="legend-labels">
+          <span class="legend-label">Sidewalk</span>
+          <span class="legend-label" style="left: 50%">Roadway</span>
+          <span class="legend-label" style="left: 100%; transform: translateX(-100%)">Both</span>
+        </div>
       </div>
     </div>
 
     <div class="description">
-      This interactive map showcases open restaurants in Manhattan that offer outdoor seating. Explore locations, seating types, and neighborhoods. Each dot on the map represents a restaurant — click for details!
+      This interactive map visualizes Open Restaurants locations across NYC, showing establishments that participate in the Open Restaurants program. The visualization includes information about restaurant names, locations, and their seating choices (sidewalk, roadway, or both). Use the charts below to explore the distribution of restaurants by borough and seating type.
     </div>
 
     <div class="chart-container">
-      <h4>Seating Type Distribution</h4>
+      <h4>Restaurants by Borough</h4>
       <canvas id="chart-histogram"></canvas>
     </div>
 
     <div class="chart-container">
-      <h4>Top 10 Neighborhoods by Restaurant Count</h4>
+      <h4>Restaurants by Seating Type</h4>
       <canvas id="chart-scatter"></canvas>
     </div>
   </div>

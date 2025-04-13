@@ -5,19 +5,15 @@ mapboxgl.accessToken = 'pk.eyJ1IjoiMDIwOXZhaWJoYXYiLCJhIjoiY2x6cW4xY2w5MWswZDJxc
 const map = new mapboxgl.Map({
     container: 'map',
     style: 'mapbox://styles/0209vaibhav/cm86orke900fn01qv4s7u9gwl',
-    center: [10, 30], // Center is less relevant when using fitBounds immediately
-    // zoom: 1.8, // Initial zoom will be set by fitBounds
-    maxZoom: 4,
-    // minZoom: 1.5, // minZoom will be set dynamically after fitBounds
+    center: [50, 50],
+    zoom: 1,
+    maxZoom: 6,
     preserveDrawingBuffer: true,
-    maxBounds: [ // Update these bounds to match the desired visible area
-        [-180, -55], // Southwest coordinates
-        [180, 70]  // Northeast coordinates
+    maxBounds: [
+        [-180, -55],
+        [180, 65]
     ],
-    renderWorldCopies: false, // Keep false to prevent repeating world
-    fitBoundsOptions: { // Default padding for fitBounds calls if not specified
-        padding: 0
-    }
+    renderWorldCopies: false
 });
 
 // Add navigation controls
@@ -84,25 +80,6 @@ const cities = [
 
 // Wait for map style to load before adding markers
 map.on('style.load', () => {
-    // Define the target bounds
-    const targetBounds = [
-        [-180, -55],
-        [180, 70]
-    ];
-
-    // Fit the map to the target bounds immediately
-    map.fitBounds(targetBounds, {
-        padding: 0,
-        duration: 0,
-        linear: true
-    });
-
-    // Set the minZoom AFTER the fitBounds operation completes
-    map.once('zoomend', () => {
-        const currentZoom = map.getZoom();
-        map.setMinZoom(currentZoom);
-    });
-
     // Convert cities data to GeoJSON
     const geojsonData = {
         type: 'FeatureCollection',

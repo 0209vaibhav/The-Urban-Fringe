@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Restaurant Timeline</title>
+  <link rel="stylesheet" href="style.css">
+  <style>
+    body, html {
+      margin: 0;
+      padding: 0;
+      height: 100%;
+      overflow: hidden;
+      background-color: black;
+      color: white;
+      font-family: Consolas, monospace;
+    }
+
+    .grid-container {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      grid-template-rows: repeat(3, 1fr);
+      gap: 0;
+      width: calc(100vw - 100px);
+      height: 100vh;
+    }
+
+    .grid-item {
+      position: relative;
+      overflow: hidden;
+    }
+
+    .grid-item img {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 102%;
+      height: 102%;
+      object-fit: cover;
+      transform: translate(-50%, -50%);
+    }
+
+    @supports (object-fit: cover) {
+      .grid-item img {
+        top: -2.5%;
+        left: -2.5%;
+        transform: none;
+      }
+    }
+
+    .city-name {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background-color: rgba(0, 0, 0, 0.5);
+      color: white;
+      font-size: 1.5vw;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+      pointer-events: none;
+    }
+
+    .grid-item:hover .city-name {
+      opacity: 1;
+    }
+  </style>
+</head>
+<body>
+  <div class="grid-container">
+    <div class="grid-item" data-restaurant="67 Orange Street">
+      <img src="67 Orange Street/67 Orange Street_2024.jpg" alt="67 Orange Street">
+      <div class="restaurant-name">67 Orange Street</div>
+    </div>
+    <div class="grid-item" data-restaurant="Bixi">
+      <img src="Bixi/Bixi_2024.jpg" alt="Bixi">
+      <div class="restaurant-name">Bixi</div>
+    </div>
+    <div class="grid-item" data-restaurant="Cantina Taqueria & Tequila Bar">
+      <img src="Cantina Taqueria & Tequila Bar/Cantina Taqueria & Tequila Bar_2024.jpg" alt="Cantina Taqueria & Tequila Bar">
+      <div class="restaurant-name">Cantina Taqueria & Tequila Bar</div>
+    </div>
+    <div class="grid-item" data-restaurant="Harlem Burger">
+      <img src="Harlem Burger/Harlem Burger_2024.jpg" alt="Harlem Burger">
+      <div class="restaurant-name">Harlem Burger</div>
+    </div>
+    <div class="grid-item" data-restaurant="Lalibela Ethopian Restaurant">
+      <img src="Lalibela Ethopian Restaurant/Lalibela Ethopian Restaurant_2024.jpg" alt="Lalibela Ethiopian Restaurant">
+      <div class="restaurant-name">Lalibela Ethiopian Restaurant</div>
+    </div>
+    <div class="grid-item" data-restaurant="Lido Harlem Restaurant">
+      <img src="Lido Harlem Restaurant/Lido Harlem Restaurant_2024.jpg" alt="Lido Harlem Restaurant">
+      <div class="restaurant-name">Lido Harlem Restaurant</div>
+    </div>
+    <div class="grid-item" data-restaurant="Melba's Restaurant">
+      <img src="Melba's Restaurant/Melba's Restaurant_2024.jpg" alt="Melba's Restaurant">
+      <div class="restaurant-name">Melba's Restaurant</div>
+    </div>
+    <div class="grid-item" data-restaurant="Mess Hall">
+      <img src="Mess Hall/Mess Hall_2024.jpg" alt="Mess Hall">
+      <div class="restaurant-name">Mess Hall</div>
+    </div>
+    <div class="grid-item" data-restaurant="Ortomare Ristorante Pizzeria">
+      <img src="Ortomare Ristorante Pizzeria/Ortomare Ristorante Pizzeria_2024.jpg" alt="Ortomare Ristorante Pizzeria">
+      <div class="restaurant-name">Ortomare Ristorante Pizzeria</div>
+    </div>
+    <div class="grid-item" data-restaurant="Rosa Pizza">
+      <img src="Rosa Pizza/Rosa Pizza_2024.jpg" alt="Rosa Pizza">
+      <div class="restaurant-name">Rosa Pizza</div>
+    </div>
+    <div class="grid-item" data-restaurant="Silvana">
+      <img src="Silvana/Silvana_2024.jpg" alt="Silvana">
+      <div class="restaurant-name">Silvana</div>
+    </div>
+    <div class="grid-item" data-restaurant="Vinateria">
+      <img src="Vinateria/Vinateria_2024.jpg" alt="Vinateria">
+      <div class="restaurant-name">Vinateria</div>
+    </div>
+  </div>
+
+  <div class="year-slider-container">
+    <div class="year-slider">
+      <input type="range" id="yearSlider" min="2012" max="2024" value="2024" step="1">
+      <div class="year-labels" id="yearLabels"></div>
+    </div>
+  </div>
+
+  <script src="scripts.js"></script>
+</body>
+</html>

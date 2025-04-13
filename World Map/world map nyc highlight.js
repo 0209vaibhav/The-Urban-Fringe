@@ -6,9 +6,9 @@ const map = new mapboxgl.Map({
     container: 'map',
     style: 'mapbox://styles/mapbox/light-v10',
     center: [-74.0060, 40.7128],
-    zoom: 10, // Adjusted default zoom level
+    zoom: 10.2, // Adjusted default zoom level
     maxZoom: 15,
-    minZoom: 8,
+    minZoom: 10.2,
     preserveDrawingBuffer: true
 });
 
@@ -43,8 +43,22 @@ map.on('load', () => {
                         '5', '#8000ff',      // Staten Island
                         '#cccccc'            // Default/Other
                     ],
-                    'fill-opacity': 0.7,
-                    'fill-outline-color': '#000000'
+                    'fill-opacity': [
+                        'match',
+                        ['get', 'borocode'],
+                        '1', 0.7,           // Manhattan
+                        0.2                 // All other boroughs
+                    ],
+                    'fill-outline-color': [
+                        'match',
+                        ['get', 'borocode'],
+                        '1', '#ff007f',      // Manhattan
+                        '2', '#0080ff',      // Bronx
+                        '3', '#ff7f00',      // Brooklyn
+                        '4', '#80ff00',      // Queens
+                        '5', '#8000ff',      // Staten Island
+                        '#cccccc'            // Default/Other
+                    ]
                 }
             });
 

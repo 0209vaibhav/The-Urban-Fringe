@@ -14,24 +14,62 @@
     }
 
     body {
-      display: flex;
-      overflow: hidden;
+      margin: 0;
+      padding: 0;
       font-family: 'Inter', 'Segoe UI', sans-serif;
     }
 
     #map {
-      flex: 1;
-      height:  100% !important;
-      position: relative;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: calc(100% - 440px); /* 400px for info panel + 20px padding on each side */
+      height: 100%;
+      z-index: 1;
     }
 
     #map .mapboxgl-canvas {
       height: 100% !important;
     }
 
+    .map-controls {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      z-index: 3;
+      background: white;
+      padding: 10px;
+      border-radius: 8px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    }
+
+    .map-controls button {
+      background: #fff;
+      border: 1px solid #ddd;
+      padding: 8px 12px;
+      margin: 0 4px;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .map-controls button:hover {
+      background: #f5f5f5;
+    }
+
+    .map-controls button.active {
+      background: #1a1a1a;
+      color: white;
+      border-color: #1a1a1a;
+    }
+
     .info-panel {
-      width: 360px;
-      height: 100%;
+      position: fixed;
+      top: 0px;
+      right: 0px;
+      width: 400px;
+      height: calc(100vh - 40px);
+      margin-bottom: 20px;
       background: rgba(255, 255, 255, 0.95);
       color: #333;
       padding: 20px;
@@ -39,28 +77,93 @@
       backdrop-filter: blur(8px);
       box-shadow: -2px 0 8px rgba(0,0,0,0.1);
       z-index: 2;
-      flex-shrink: 0;
+      border-radius: 0px;
+      display: block;
     }
 
-    .info-panel h1 {
-      font-size: 20px;
-      margin-top: 0;
-      margin-bottom: 12px;
+    .nav-buttons {
+      position: fixed;
+      right: 440px;
+      top: 50%;
+      transform: translateY(-50%);
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+      z-index: 3;
+    }
+
+    .nav-button {
+      background: rgba(255, 255, 255, 0.95);
+      border: none;
+      border-radius: 0 4px 4px 0;
+      width: 40px;
+      height: 90px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      box-shadow: 0 -2px 6px rgba(0,0,0,0.1);
+      transition: all 0.2s ease;
       color: #1a1a1a;
+      font-size: 14px;
+      writing-mode: vertical-rl;
+      text-orientation: mixed;
+      transform: rotate(180deg);
+      padding: 10px 0;
     }
 
+    .nav-button:hover {
+      background: #1a1a1a;
+      color: white;
+      width: 45px;
+    }
+
+    .nav-button.active {
+      background: #1a1a1a;
+      color: white;
+      width: 45px;
+    }
+
+    /* Common styles */
+    .story-section {
+      margin-bottom: 40px;
+      background: rgba(255, 255, 255, 0.95);
+      border-radius: 12px;
+      backdrop-filter: blur(8px);
+      min-height: 900px;
+      flex-direction: column;
+      justify-content: flex-start;
+    }
+
+    .story-section:last-child {
+      margin-bottom: 0;
+    }
+
+    /* Typography */
+    h2, h3, h4, h5 {
+      color: #1a1a1a;
+      margin: 0 0 16px 0;
+    }
+
+    h2 { font-size: 24px; }
+    h3 { font-size: 16px; }
+    h4 { font-size: 14px; font-weight: 600; }
+    h5 { font-size: 14px; }
+
+    p {
+      font-size: 14px;
+      line-height: 1.4;
+      color: #333;
+      margin-bottom: 16px;
+    }
+
+    /* Legend styles */
     .legend {
+      background: white;
       margin-bottom: 24px;
       display: flex;
       flex-direction: column;
       gap: 8px;
-    }
-
-    .legend h4 {
-      margin: 0;
-      font-size: 15px;
-      font-weight: 500;
-      color: #1a1a1a;
     }
 
     .legend-scale {
@@ -73,25 +176,20 @@
       display: flex;
       height: 16px;
       width: 100%;
+      margin-bottom: 4px;
     }
 
     .legend-bar {
       flex: 1;
+      height: 20px;
       transition: all 0.2s ease;
-      box-sizing: border-box;
       cursor: pointer;
     }
 
-    .legend-bar.highlighted {
-      border: 2px solid #000;
-      transform: scale(1.05);
+    .legend-bar:hover {
+      opacity: 0.8;
+      transform: translateY(-1px);
     }
-
-    .legend-bar:nth-child(1) { background-color: #fee5d9; }
-    .legend-bar:nth-child(2) { background-color: #fcae91; }
-    .legend-bar:nth-child(3) { background-color: #fb6a4a; }
-    .legend-bar:nth-child(4) { background-color: #de2d26; }
-    .legend-bar:nth-child(5) { background-color: #a50f15; }
 
     .legend-labels {
       display: flex;
@@ -107,12 +205,192 @@
       color: #666;
     }
 
-    .legend-label:nth-child(1) { left: 0; transform: translateX(0); }
-    .legend-label:nth-child(2) { left: 20%; }
-    .legend-label:nth-child(3) { left: 40%; }
-    .legend-label:nth-child(4) { left: 60%; }
-    .legend-label:nth-child(5) { left: 80%; }
-    .legend-label:nth-child(6) { left: 100%; transform: translateX(-100%); }
+
+    .chart-container:last-child {
+      margin-bottom: 125px;
+    }
+
+    .chart-observation {
+      color: #666;
+      font-size: 14px;
+      margin: 5px 0 15px 0;
+      line-height: 1.4;
+      font-style: italic;
+    }
+
+    /* Type definition styles */
+    .type-definitions {
+      background: #ffffff;
+      border-radius: 12px;
+      margin-bottom: 15px;
+    }
+
+    .type-definition {
+      margin-bottom: 15px;
+      padding: 10px;
+      background: #f8f9fa;
+      border-radius: 8px;
+      transition: all 0.2s ease;
+    }
+
+    .type-definition:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    }
+
+    .type-definition:last-child {
+      margin-bottom: 0;
+    }
+
+    .type-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .type-header h5 {
+      margin: 0;
+      font-size: 16px;
+      color: #1a1a1a;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .type-header h5 i {
+      color: #4a4a4a;
+      font-size: 18px;
+    }
+
+    .type-properties {
+      margin: 0;
+      padding-left: 0;
+      list-style: none;
+    }
+
+    .type-properties li {
+      color: #4a4a4a;
+      font-size: 14px;
+      line-height: 1.5;
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+    }
+
+    .type-properties li:last-child {
+      margin-bottom: 0;
+    }
+
+    .type-properties li i {
+      color: #2ecc71;
+      font-size: 14px;
+      margin-top: 4px;
+    }
+
+    .legend-shape {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-size: 14px;
+      color: #4a4a4a;
+      flex: 1;
+    }
+
+    .shape-square, .shape-circle {
+      width: 24px;
+      height: 24px;
+      transition: all 0.3s ease;
+      border: 2px solid transparent;
+    }
+
+    .shape-square {
+      border-radius: 4px;
+      background-color: #ffbf00; /* Yellow */
+    }
+
+    .shape-circle {
+      border-radius: 50%;
+      background-color: #ff007f; /* Magenta */
+    }
+
+    .shape-square.highlighted,
+    .shape-circle.highlighted {
+      transform: scale(1.1);
+      border-color: #000000;
+      opacity: 0.4;
+    }
+
+    /* Chart container styles update */
+    .chart-container {
+      margin-top: 32px;
+      margin-bottom: 32px;
+      height: 320px;
+      position: relative;
+      background: #ffffff;
+      border-radius: 12px;
+    }
+
+
+
+    /* Keep existing color scheme rules */
+    /* Area legend colors (blue) */
+    .sidewalks-section .legend-bar:nth-child(1) { background-color: #deebf7; }
+    .sidewalks-section .legend-bar:nth-child(2) { background-color: #c6dbef; }
+    .sidewalks-section .legend-bar:nth-child(3) { background-color: #9ecae1; }
+    .sidewalks-section .legend-bar:nth-child(4) { background-color: #6baed6; }
+    .sidewalks-section .legend-bar:nth-child(5) { background-color: #4292c6; }
+    .sidewalks-section .legend-bar:nth-child(6) { background-color: #2171b5; }
+
+    /* Width legend colors (green) */
+    .widths-section .legend-bar:nth-child(1) { background-color: #e5f5e0; }
+    .widths-section .legend-bar:nth-child(2) { background-color: #c7e9c0; }
+    .widths-section .legend-bar:nth-child(3) { background-color: #a1d99b; }
+    .widths-section .legend-bar:nth-child(4) { background-color: #74c476; }
+    .widths-section .legend-bar:nth-child(5) { background-color: #41ab5d; }
+    .widths-section .legend-bar:nth-child(6) { background-color: #238b45; }
+
+    /* Cafe area legend colors (red) */
+    [data-step="area"] .legend-bar:nth-child(1) { background-color: #fee5d9; }
+    [data-step="area"] .legend-bar:nth-child(2) { background-color: #fcae91; }
+    [data-step="area"] .legend-bar:nth-child(3) { background-color: #fb6a4a; }
+    [data-step="area"] .legend-bar:nth-child(4) { background-color: #de2d26; }
+    [data-step="area"] .legend-bar:nth-child(5) { background-color: #a50f15; }
+
+    /* Label positioning */
+    /* Default positioning for 7-label legends (sidewalks and widths sections) */
+    .sidewalks-section .legend-label:nth-child(1),
+    .widths-section .legend-label:nth-child(1) { left: 0; transform: translateX(0); }
+    .sidewalks-section .legend-label:nth-child(2),
+    .widths-section .legend-label:nth-child(2) { left: 16.67%; }
+    .sidewalks-section .legend-label:nth-child(3),
+    .widths-section .legend-label:nth-child(3) { left: 33.33%; }
+    .sidewalks-section .legend-label:nth-child(4),
+    .widths-section .legend-label:nth-child(4) { left: 50%; }
+    .sidewalks-section .legend-label:nth-child(5),
+    .widths-section .legend-label:nth-child(5) { left: 66.67%; }
+    .sidewalks-section .legend-label:nth-child(6),
+    .widths-section .legend-label:nth-child(6) { left: 83.33%; }
+    .sidewalks-section .legend-label:nth-child(7),
+    .widths-section .legend-label:nth-child(7) { left: 100%; transform: translateX(-100%); }
+
+    /* Special positioning for 6-label cafe areas legend */
+    [data-step="area"] .legend-label:nth-child(1) { left: 0; transform: translateX(0); }
+    [data-step="area"] .legend-label:nth-child(2) { left: 20%; }
+    [data-step="area"] .legend-label:nth-child(3) { left: 40%; }
+    [data-step="area"] .legend-label:nth-child(4) { left: 60%; }
+    [data-step="area"] .legend-label:nth-child(5) { left: 80%; }
+    [data-step="area"] .legend-label:nth-child(6) { left: 100%; transform: translateX(-100%); }
+
+    .section-content {
+      margin-top: 20px;
+    }
+
+    .info-panel h1 {
+      font-size: 20px;
+      margin-top: 0;
+      margin-bottom: 12px;
+      color: #1a1a1a;
+    }
 
     .description {
       font-size: 13px;
@@ -123,17 +401,16 @@
 
     .details-section {
       margin-bottom: 20px;
-      padding: 18px;
+      padding: 15px;
       background: #ffffff;
       border-radius: 12px;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
       border: 1px solid #ddd;
       transition: all 0.3s ease;
       display: flex;
       flex-direction: column;
-      justify-content: space-between;
       text-align: left;
-      height: 250px;
+      height: 660px;
+      overflow-y: auto;
     }
 
     .details-section h3 {
@@ -146,7 +423,7 @@
     }
 
     .details-section .restaurant-header {
-      margin-bottom: 0px;
+      margin-bottom: 10px;
     }
 
     .details-section .restaurant-name {
@@ -169,11 +446,12 @@
       gap: 8px;
     }
 
-    .details-section .info-grid {
+    .info-grid {
       display: grid;
       grid-template-columns: 1fr 1fr;
       gap: 10px;
       margin: 10px 0;
+      overflow-y: auto;
     }
 
     .details-section .info-item {
@@ -235,7 +513,7 @@
       justify-content: center;
       align-items: center;
       gap: 14px;
-      height: 250px;
+      height: 660px;
     }
 
     .details-section.placeholder i {
@@ -248,21 +526,17 @@
       font-size: 13px;
     }
 
-    .chart-container {
-      margin-bottom: 40px;
-      height: 280px;
-      position: relative;
-      cursor: pointer;
-    }
-
-    .chart-container:last-child {
-      margin-bottom: 24px;
-    }
-
     .chart-container h4 {
       color: #1a1a1a;
       margin-bottom: 8px;
       font-size: 14px;
+    }
+
+    .chart-container .description {
+      font-size: 13px;
+      color: #666;
+      margin-bottom: 15px;
+      line-height: 1.4;
     }
 
     canvas {
@@ -278,180 +552,232 @@
       }
     }
 
-    .legend-shapes {
-      margin-top: 4px;
-      width: 100%;
+    .legend-title {
+      font-size: 14px;
+      font-weight: 600;
+      margin-bottom: 8px;
+      color: #333;
     }
 
-    .legend-shape-row {
-      display: flex;
-      width: 100%;
-      justify-content: space-between;
-      align-items: center;
-    }
-
-    .legend-shape {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      font-size: 12px;
-      color: #666;
-      flex: 1;
-    }
-
-    .shape-square {
-      width: 12px;
-      height: 12px;
-      background-color: #999;
-      border-radius: 2px;
-    }
-
-    .shape-circle {
-      width: 12px;
-      height: 12px;
-      background-color: #999;
-      border-radius: 50%;
+    .legend-bar.highlighted {
+      border: 2px solid #000;
     }
   </style>
 </head>
 <body>
-
   <div id="map"></div>
 
-  <div class="info-panel">
-    <h1>NYC Sidewalk Cafes Explorer</h1>
-
-    <div class="description">
-      This interactive map visualizes sidewalk cafes across New York City, categorized by their square footage. Explore the distribution and characteristics of outdoor dining spaces through real-time visuals and data.
-    </div>
-
-    <div class="legend">
-      <h4>Area</h4>
-      <div class="legend-scale">
-        <div class="legend-bars">
-          <div class="legend-bar"></div>
-          <div class="legend-bar"></div>
-          <div class="legend-bar"></div>
-          <div class="legend-bar"></div>
-          <div class="legend-bar"></div>
-        </div>
-        <div class="legend-labels">
-          <span class="legend-label">0</span>
-          <span class="legend-label">100</span>
-          <span class="legend-label">300</span>
-          <span class="legend-label">500</span>
-          <span class="legend-label">700</span>
-          <span class="legend-label">1000+</span>
-        </div>
-      </div>
-    </div>
-
-    <div class="legend">
-      <h4>Type</h4>
-      <div class="legend-scale">
-        <div class="legend-shapes">
-          <div class="legend-shape-row">
-            <div class="legend-shape">
-              <div class="shape-square"></div>
-              <span>Enclosed</span>
-            </div>
-            <div class="legend-shape">
-              <div class="shape-circle"></div>
-              <span>Unenclosed</span>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <div class="details-section placeholder" id="restaurant-details">
-      <h3>Restaurant Details</h3>
-      <p>Hover or click on a marker to see restaurant details</p>
-    </div>
+  <div class="nav-buttons">
+    <button class="nav-button" data-section="sidewalks">Sidewalks</button>
+    <button class="nav-button" data-section="widths">Widths</button>
+    <button class="nav-button" data-section="intro">Sidewalk Cafes</button>
+    <button class="nav-button" data-section="area">Area</button>
+    <button class="nav-button" data-section="types">Structure Types</button>
+    <button class="nav-button" data-section="seating">Seating Type</button>
   </div>
 
   <div class="info-panel">
-    <div class="chart-container">
-      <h4>Area of Sidewalk Cafes</h4>
-      <canvas id="chart-histogram"></canvas>
-    </div>
+    <section class="story-section sidewalks-section" data-step="sidewalks">
+      <h2>Sidewalks of NYC</h2>
+      <h3>Spatial Thresholds as Platforms for Eating Spaces</h3>
+      <p>Sidewalks are more than circulation routes—they're active public stages where urban life plays out. In a dense city like New York, they support a wide range of activities: walking, waiting, eating, pausing, performing, and exchanging. Positioned between private buildings and public streets, sidewalks act as spatial buffers that enable smooth transitions between movement and interaction.</p>
+      <p>As hosts for sidewalk cafes, these thresholds gain a dual identity—connecting spaces and becoming destinations themselves. Their width, scale, and design directly influence how people gather, linger, and connect, making sidewalks essential to the city's social, cultural, and spatial fabric.</p>
+      <div class="legend">
+        <h4>Sidewalk Area (sq ft)</h4>
+        <div class="legend-scale">
+          <div class="legend-bars">
+            <div class="legend-bar"></div>
+            <div class="legend-bar"></div>
+            <div class="legend-bar"></div>
+            <div class="legend-bar"></div>
+            <div class="legend-bar"></div>
+            <div class="legend-bar"></div>
+          </div>
+          <div class="legend-labels">
+            <span class="legend-label">0</span>
+            <span class="legend-label">5k</span>
+            <span class="legend-label">10k</span>
+            <span class="legend-label">15k</span>
+            <span class="legend-label">20k</span>
+            <span class="legend-label">25k</span>
+            <span class="legend-label">>25k</span>
+          </div>
+        </div>
+      </div>
+      <div class="chart-container">
+        <h4>Sidewalk Area Distribution</h4>
+        <p class="chart-observation">Most Manhattan sidewalks have areas between 5,000-15,000 sq ft, with fewer instances of very large (>20,000 sq ft) sidewalks, suggesting a fairly standardized sidewalk size across the borough.</p>
+        <canvas id="sidewalk-histogram"></canvas>
+      </div>
 
-    <div class="chart-container">
-      <h4>Size vs Tables</h4>
-      <canvas id="chart-scatter"></canvas>
-    </div>
+    </section>
+
+    <section class="story-section widths-section" data-step="widths">
+      <h2>Sidewalk Widths</h2>
+      <h3>Dimensions That Define Urban Experience</h3>
+      <p>Sidewalk width is more than a measurement—it's a design condition that shapes how we move, pause, and interact in the city. Wider sidewalks offer space for more than walking: they invite café seating, street vendors, public art, and spontaneous gatherings. In dense urban environments like New York, the width of a sidewalk determines whether it simply supports flow or becomes a shared stage for public life. These dimensions quietly influence comfort, access, and the richness of everyday urban experience.</p>
+      
+      <div class="legend">
+        <h4>Sidewalk Width (ft)</h4>
+        <div class="legend-scale">
+          <div class="legend-bars">
+            <div class="legend-bar"></div>
+            <div class="legend-bar"></div>
+            <div class="legend-bar"></div>
+            <div class="legend-bar"></div>
+            <div class="legend-bar"></div>
+            <div class="legend-bar"></div>
+          </div>
+          <div class="legend-labels">
+            <span class="legend-label">0</span>
+            <span class="legend-label">3</span>
+            <span class="legend-label">6</span>
+            <span class="legend-label">9</span>
+            <span class="legend-label">12</span>
+            <span class="legend-label">15</span>
+            <span class="legend-label">>15</span>
+          </div>
+        </div>
+      </div>
+      <div class="chart-container">
+        <h4>Sidewalk Width Distribution</h4>
+        <p class="chart-observation">The majority of sidewalks are between 6-12 feet wide, with a peak around 9 feet, indicating a comfortable width for both pedestrian traffic and potential cafe seating.</p>
+        <canvas id="sidewalk-width-histogram"></canvas>
+      </div>
+    </section>
+
+    <section class="story-section" data-step="intro">
+      <h2>Sidewalk Cafes in NYC</h2>
+      <h3 class="subheading">Where Private Cafes Meet Public Sidewalks</h3>
+      <p>New York City's sidewalk cafes are more than just places to eat - they're vibrant extensions of the city's streetscape. These outdoor dining spaces have transformed the city's urban fabric, creating lively public spaces where people can gather, dine, and enjoy the city's energy.</p>
+      <div class="section-content">
+        <div class="details-section placeholder" id="restaurant-details">
+          <h3>Restaurant Details</h3>
+          <p>Hover or click on a marker to see restaurant details</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="story-section" data-step="area">
+      <h2>Area of the Sidewalk Cafes</h2>
+      <h3 class="subheading">Mapping the Footprint of Outdoor Dining</h3>
+      <p>This map visualizes the spread and density of sidewalk cafes across Manhattan—showing how these in-between spaces activate the edges of streets. Each point marks a place where private hospitality meets public infrastructure, turning sidewalks into vibrant zones of leisure, dining, and urban encounter. Together, they reflect how the city's street life is shaped one table, one threshold at a time.</p>
+      <div class="section-content">
+        <div class="legend">
+          <h4>Sidewalk Cafe Area (sq ft)</h4>
+          <div class="legend-scale">
+            <div class="legend-bars">
+              <div class="legend-bar"></div>
+              <div class="legend-bar"></div>
+              <div class="legend-bar"></div>
+              <div class="legend-bar"></div>
+              <div class="legend-bar"></div>
+            </div>
+            <div class="legend-labels">
+              <span class="legend-label">0</span>
+              <span class="legend-label">100</span>
+              <span class="legend-label">300</span>
+              <span class="legend-label">500</span>
+              <span class="legend-label">700</span>
+              <span class="legend-label">1000+</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="chart-container">
+          <h4>Distribution of Cafe Areas</h4>
+          <p class="chart-observation">This histogram shows how sidewalk cafe areas are distributed across different size categories. Most cafes fall into the smaller size ranges, with fewer establishments occupying larger spaces.</p>
+          <canvas id="chart-histogram"></canvas>
+        </div>
+      </div>
+    </section>
+
+    <section class="story-section" data-step="types">
+      <h2>Structure Types</h2>
+      <h3 class="subheading">Exploring the Forms of Sidewalk Cafes</h3>
+      <p>From open-air setups to enclosed outdoor rooms, sidewalk cafes come in varied forms. These structures influence how space is used, how people gather, and how the street feels—blurring the line between public and private life.</p>
+      <div class="section-content">
+        <div class="type-definitions">
+          <div class="type-definition">
+            <div class="type-header">
+              <h5><i class="fas fa-building"></i> Enclosed Seating</h5>
+            </div>
+            <ul class="type-properties">
+              <li><i class="fas fa-check"></i> surrounded by solid walls, partitions, or structures.</li>
+              <li><i class="fas fa-check"></i> Often includes roofs or coverings.</li>
+              <li><i class="fas fa-check"></i> Might be artifically climate-controlled.</li>
+              <li><i class="fas fa-lightbulb"></i> For example: A bubble tent, wooden structure, or fully walled-in patio.</li>
+            </ul>
+          </div>
+
+          <div class="type-definition">
+            <div class="type-header">
+              <h5><i class="fas fa-umbrella-beach"></i> Unenclosed Seating</h5>
+            </div>
+            <ul class="type-properties">
+              <li><i class="fas fa-check"></i> Minimal or no enclosing structures.</li>
+              <li><i class="fas fa-check"></i> May have umbrellas or light overhead coverings.</li>
+              <li><i class="fas fa-check"></i> Open-air setup, maintains full airflow and is directly exposed to outside elements.</li>
+              <li><i class="fas fa-lightbulb"></i> For example: Tables and chairs on a sidewalk with only a canopy or umbrellas.</li>
+            </ul>
+          </div>
+        </div>
+        <div class="chart-container">
+          <h4>Cafe Types Distribution</h4>
+          <canvas id="chart-types"></canvas>
+        </div>
+      </div>
+    </section>
+
+    <section class="story-section" data-step="seating">
+      <h2>Seating Types</h2>
+      <h3 class="subheading">Mapping Sidewalk, Roadway, and Hybrid Seating</h3>
+      <p></p>
+      <div class="section-content">
+        <div class="type-definitions">
+          <div class="type-definition">
+            <div class="type-header">
+              <h5><i class="fas fa-walking"></i> Sidewalk Seating</h5>
+            </div>
+            <ul class="type-properties">
+              <li><i class="fas fa-check"></i> Located on the sidewalk adjacent to the restaurant.</li>
+              <li><i class="fas fa-check"></i> Often includes umbrellas, planters, or simple barriers.</li>
+              <li><i class="fas fa-exclamation-triangle"></i> Can narrow pedestrian pathways and disrupt sidewalk flow—especially in high-footfall areas.</li>
+            </ul>
+          </div>
+
+          <div class="type-definition">
+            <div class="type-header">
+              <h5><i class="fas fa-road"></i> Roadway Seating</h5>
+            </div>
+            <ul class="type-properties">
+              <li><i class="fas fa-check"></i> Occupies the curb lane or former parking space in front of the restaurant.</li>
+              <li><i class="fas fa-check"></i> Requires sturdy barriers and safety regulations compliance.</li>
+              <li><i class="fas fa-exclamation-triangle"></i> Reduces roadway availability, impacting parking, bike lanes, or traffic circulation.</li>
+            </ul>
+          </div>
+
+          <div class="type-definition">
+            <div class="type-header">
+              <h5><i class="fas fa-exchange-alt"></i> Hybrid Seating</h5>
+            </div>
+            <ul class="type-properties">
+              <li><i class="fas fa-check"></i> Combines both zones for expanded outdoor dining.</li>
+              <li><i class="fas fa-check"></i> Hampers movement of pedestrians and vehicles.</li>
+              <li><i class="fas fa-exclamation-triangle"></i> May constrain both pedestrian and vehicular space if not well-managed.</li>
+            </ul>
+          </div>
+        </div>
+        <div class="chart-container">
+          <h4>Seating Type Distribution</h4>
+          <canvas id="chart-seating"></canvas>
+        </div>
+      </div>
+    </section>
   </div>
 
   <script src="https://api.mapbox.com/mapbox-gl-js/v2.15.0/mapbox-gl.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-  <script>
-    // This will be used to store the map instance globally
-    window.mapInstance = null;
-    
-    // Function to handle legend bar interactions
-    function setupLegendInteractions() {
-      const legendBars = document.querySelectorAll('.legend-bar');
-      legendBars.forEach((bar, index) => {
-        bar.addEventListener('mouseenter', () => {
-          const minSqft = [0, 100, 300, 500, 700][index];
-          const maxSqft = [100, 300, 500, 700, Infinity][index];
-          window.highlightMarkersBySize(minSqft, maxSqft);
-        });
-
-        bar.addEventListener('mouseleave', () => {
-          window.resetMarkerHighlights();
-        });
-      });
-    }
-
-    // Function to handle chart interactions
-    function setupChartInteractions() {
-      const histogram = document.getElementById('chart-histogram');
-      const scatter = document.getElementById('chart-scatter');
-
-      // Histogram interaction
-      histogram.addEventListener('mousemove', (e) => {
-        if (!window.histogramChart) return;
-        
-        const points = window.histogramChart.getElementsAtEventForMode(e, 'nearest', { intersect: true }, false);
-        if (points.length > 0) {
-          const index = points[0].index;
-          const minSqft = [0, 100, 300, 500, 700][index];
-          const maxSqft = [100, 300, 500, 700, Infinity][index];
-          window.highlightMarkersBySize(minSqft, maxSqft);
-        }
-      });
-
-      histogram.addEventListener('mouseleave', () => {
-        window.resetMarkerHighlights();
-      });
-
-      // Scatter plot interaction
-      scatter.addEventListener('mousemove', (e) => {
-        if (!window.scatterChart) return;
-        
-        const points = window.scatterChart.getElementsAtEventForMode(e, 'nearest', { intersect: true }, false);
-        if (points.length > 0) {
-          const point = window.scatterChart.data.datasets[0].data[points[0].index];
-          const category = window.getSizeCategory(point.x);
-          const minSqft = [0, 100, 300, 500, 700][category];
-          const maxSqft = [100, 300, 500, 700, Infinity][category];
-          window.highlightMarkersBySize(minSqft, maxSqft);
-        }
-      });
-
-      scatter.addEventListener('mouseleave', () => {
-        window.resetMarkerHighlights();
-      });
-    }
-
-    // Initialize interactions after the map is loaded
-    document.addEventListener('DOMContentLoaded', () => {
-      setupLegendInteractions();
-      setupChartInteractions();
-      resetRestaurantDetails();
-    });
-  </script>
   <script src="Combined_Sidewalk_Cafes.js"></script>
 </body>
 </html>
